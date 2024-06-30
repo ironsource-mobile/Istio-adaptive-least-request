@@ -10,13 +10,12 @@ on:
       tag:
         description: Tag for the docker image
         required: true
-
+permissions:
+  id-token: write
+  contents: read
 jobs:
   deploy:
     runs-on: [self-hosted, x64, linux, eks, us, general, prod]
-    permissions:
-      id-token: write
-      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v2
