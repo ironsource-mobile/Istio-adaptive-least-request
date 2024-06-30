@@ -40,6 +40,7 @@ import (
 
 	optimizationv1alpha1 "istio-adaptive-least-request/api/v1alpha1"
 	"istio-adaptive-least-request/internal/controller"
+
 	istioClientV1 "istio.io/client-go/pkg/apis/networking/v1"
 	// +kubebuilder:scaffold:imports
 )
@@ -75,7 +76,7 @@ func main() {
 	var minOptimizeCpuDistancePercent, cpuDistanceMultiplierPercent float64
 	var newEndpointsPercentileWeight int
 
-	flag.StringVar(&metricsAddr, "metrics-bind-address", "0", "The address the metric endpoint binds to. "+
+	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to. "+
 		"Use the port :8080. If not set, it will be 0 in order to disable the metrics server")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
 	flag.BoolVar(&enableLeaderElection, "leader-elect", false,
@@ -257,6 +258,10 @@ func main() {
 	}
 
 	setupLog.Info("starting manager")
+	flag.VisitAll(func(f *flag.Flag) {
+		setupLog.Info("flag", f.Name, f.Value)
+	})
+
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)
