@@ -20,23 +20,24 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/montanaflynn/stats"
-	"github.com/prometheus/client_golang/prometheus"
 	"istio-adaptive-least-request/internal/helpers"
 	customMetrics "istio-adaptive-least-request/internal/metrics"
-	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/labels"
 	"math"
 	"net/http"
 	"net/url"
-	"sigs.k8s.io/controller-runtime/pkg/event"
-	"sigs.k8s.io/controller-runtime/pkg/predicate"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/montanaflynn/stats"
+	"github.com/prometheus/client_golang/prometheus"
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
+	"sigs.k8s.io/controller-runtime/pkg/event"
+	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
 	//istionetworkingv1beta1 "istio.io/client-go/pkg/apis/networking/v1beta1"
 	istionetworkingv1 "istio.io/client-go/pkg/apis/networking/v1"
@@ -127,12 +128,12 @@ func (r *WeightOptimizerReconciler) Reconcile(ctx context.Context, req ctrl.Requ
 	logger.V(1).Info("Reconcile WeightOptimizer", "WeightOptimizer.Namespace", req.Namespace, "WeightOptimizer.Name", req.Name)
 	istioOptimizer := &optimizationv1alpha1.IstioAdaptiveRequestOptimizer{}
 	if err := r.Get(ctx, req.NamespacedName, istioOptimizer); err != nil {
-		logger.Info("IstioLatencyOptimizer not found", "Namespace", req.Namespace, "Name", req.Name)
+		logger.Info("IstioAdaptiveRequestOptimizer not found", "Namespace", req.Namespace, "Name", req.Name)
 		return ctrl.Result{}, client.IgnoreNotFound(err)
 	}
 	if istioOptimizer.GetDeletionTimestamp() != nil {
-		// We've got an update event that indicate the instance is being deleted, the event it update by this controller doesn't need to do anything with it as the IstioLatencyOptimizer handle the deltion
-		logger.Info("IstioLatencyOptimizer is being deleted", "Namespace", istioOptimizer.Namespace, "Name", istioOptimizer.Name)
+		// We've got an update event that indicate the instance is being deleted, the event it update by this controller doesn't need to do anything with it as the IstioAdaptiveRequestOptimizer handle the deltion
+		logger.Info("IstioAdaptiveRequestOptimizer is being deleted", "Namespace", istioOptimizer.Namespace, "Name", istioOptimizer.Name)
 		return ctrl.Result{}, nil
 	}
 	// Iterate over the service ports to process each one
@@ -579,7 +580,7 @@ func (r *WeightOptimizerReconciler) calculateNewWeights(ctx context.Context, pod
 // constructWeightOptimizer creates a new WeightOptimizer instance based on the processed metrics.
 func (r *WeightOptimizerReconciler) createWeightOptimizer(ctx context.Context, podsMetrics map[string]*PodMetrics, objectKey client.ObjectKey, namespace string, istioOptimizer optimizationv1alpha1.IstioAdaptiveRequestOptimizer, serviceEntryWeightsMap map[string]uint32) (*optimizationv1alpha1.WeightOptimizer, error) {
 	logger := log.FromContext(ctx).WithName(r.LoggerName)
-	// Create the weightOptimizer instance with the owner reference set to the IstioLatencyOptimizer
+	// Create the weightOptimizer instance with the owner reference set to the IstioAdaptiveRequestOptimizer
 	weightOptimizer := &optimizationv1alpha1.WeightOptimizer{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      objectKey.Name,
