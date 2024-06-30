@@ -1,12 +1,12 @@
 # Adds namespace to all resources.
-namespace: istio-adpative-least-request-system
+namespace: istio-adaptive-least-request-system
 
 # Value of this field is prepended to the
 # names of all resources, e.g. a deployment named
 # "wordpress" becomes "alices-wordpress".
 # Note that it should also match with the prefix (text before '-') of the namespace
 # field above.
-namePrefix: istio-adpative-least-request-
+namePrefix: istio-adaptive-least-request-
 
 # Labels to add to all resources and selectors.
 #labels:
