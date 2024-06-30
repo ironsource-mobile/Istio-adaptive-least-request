@@ -5,7 +5,7 @@
 domain: liorfranko.github.io
 layout:
 - go.kubebuilder.io/v4
-projectName: istio-adpative-least-request
+projectName: istio-adaptive-least-request
 repo: istio-adaptive-least-request
 resources:
 - api:

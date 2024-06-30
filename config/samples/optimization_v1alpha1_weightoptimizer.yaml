@@ -2,7 +2,7 @@ apiVersion: optimization.liorfranko.github.io/v1alpha1
 kind: WeightOptimizer
 metadata:
   labels:
-    app.kubernetes.io/name: istio-adpative-least-request
+    app.kubernetes.io/name: istio-adaptive-least-request
     app.kubernetes.io/managed-by: kustomize
   name: weightoptimizer-sample
 spec:
